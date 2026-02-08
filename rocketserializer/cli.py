@@ -129,13 +129,17 @@ def ork2json(filepath, output=None, ork_jar=None, encoding="utf-8", verbose=Fals
         raise ValueError(error_msg)
 
     data_labels = bs.find("databranch").attrs["types"].split(",")
-    if "CG location" not in data_labels:
+    try:
+        from ._helpers import get_column_index
+
+        get_column_index(data_labels, ["CG location", "Situación del CG"])
+    except ValueError as e:
         message = (
             "[ork2json] The file must contain the simulation data.\n"
             + "Open the .ork file and run the simulation first."
         )
         logger.error(message)
-        raise ValueError(message)
+        raise ValueError(message) from e
 
     if not ork_jar:
         # get any .jar file in the current directory that starts with "OpenRocket"

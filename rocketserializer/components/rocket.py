@@ -13,9 +13,11 @@ def search_rocket(bs, datapoints, data_labels, burnout_position):
     logger.info("Collected rocket radius.")
 
     # get mass
+    from .._helpers import get_column_index
+
+    cg_index = get_column_index(data_labels, ["CG location", "Situación del CG"])
     cg_location_vector = [
-        float(datapoint.text.split(",")[data_labels.index("CG location")])
-        for datapoint in datapoints
+        float(datapoint.text.split(",")[cg_index]) for datapoint in datapoints
     ]
     settings["mass"] = get_mass(datapoints, data_labels, burnout_position)
     logger.info("Collected rocket mass.")
@@ -70,9 +72,11 @@ def get_rocket_radius(bs):
 
 
 def get_mass(datapoints, data_labels, burnout_position):
+    from .._helpers import get_column_index
+
+    mass_index = get_column_index(data_labels, ["Mass", "Masa"])
     mass_vector = [
-        float(datapoint.text.split(",")[data_labels.index("Mass")])
-        for datapoint in datapoints
+        float(datapoint.text.split(",")[mass_index]) for datapoint in datapoints
     ]
     return mass_vector[burnout_position]
 
@@ -98,19 +102,20 @@ def get_inertias(data_labels, burnout_position, datapoints):
         The moment of inertia of the rocket in the longitudinal and rotational
         axis, respectively.
     """
+    from .._helpers import get_column_index
+
+    long_inertia_index = get_column_index(
+        data_labels, ["Longitudinal moment of inertia", "Momento de inercia longitudinal"]
+    )
+    rot_inertia_index = get_column_index(
+        data_labels, ["Rotational moment of inertia", "Momento de inercia rotacional"]
+    )
+
     longitudinal = [
-        float(
-            datapoint.text.split(",")[
-                data_labels.index("Longitudinal moment of inertia")
-            ]
-        )
-        for datapoint in datapoints
+        float(datapoint.text.split(",")[long_inertia_index]) for datapoint in datapoints
     ][burnout_position]
     rotational = [
-        float(
-            datapoint.text.split(",")[data_labels.index("Rotational moment of inertia")]
-        )
-        for datapoint in datapoints
+        float(datapoint.text.split(",")[rot_inertia_index]) for datapoint in datapoints
     ][burnout_position]
     logger.info(
         "The moment of inertia of the rocket is: %f (longitudinal) and %f (rotational)",

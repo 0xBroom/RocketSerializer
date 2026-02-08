@@ -48,25 +48,25 @@ def search_stored_results(bs, datapoints, data_labels, time_vector, burnout_posi
         datapoints,
         data_labels,
         time_vector,
-        "Stability margin calibers",
+        ["Stability margin calibers", "Margen de estabilidad en Calibres"],
         position="max",
     )
     settings["min_stability_margin"] = __get_parameter(
         datapoints,
         data_labels,
         time_vector,
-        "Stability margin calibers",
+        ["Stability margin calibers", "Margen de estabilidad en Calibres"],
         position="min",
     )
     settings["burnout_stability_margin"] = __get_parameter(
         datapoints,
         data_labels,
         time_vector,
-        "Stability margin calibers",
+        ["Stability margin calibers", "Margen de estabilidad en Calibres"],
         position=burnout_position,
     )
     settings["max_thrust"] = __get_parameter(
-        datapoints, data_labels, time_vector, "Thrust", position="max"
+        datapoints, data_labels, time_vector, ["Thrust", "Empuje"], position="max"
     )
 
     logger.info(
@@ -76,12 +76,12 @@ def search_stored_results(bs, datapoints, data_labels, time_vector, burnout_posi
     return settings
 
 
-def __get_parameter(datapoints, data_labels, time_vector, label, position):
+def __get_parameter(datapoints, data_labels, time_vector, keys, position):
     """Get the latitude and longitude from the .ork file.
     Parameters
     ----------
-    label : str
-        Latitude or longitude.
+    keys : list
+        List of possible keys for the parameter (e.g. English/Spanish).
     datapoints : list
         List of datapoints from the .ork file.
     data_labels : list
@@ -92,10 +92,12 @@ def __get_parameter(datapoints, data_labels, time_vector, label, position):
         The position to get the value from. Can be "last", "first", "max", "min"
         or an integer.
     """
+    from .._helpers import get_column_index
+
+    index = get_column_index(data_labels, keys)
 
     parameter = [
-        float(datapoint.text.split(",")[data_labels.index(label)])
-        for datapoint in datapoints
+        float(datapoint.text.split(",")[index]) for datapoint in datapoints
     ]
     # convert to numpy array
     parameter = np.array([time_vector, parameter]).T

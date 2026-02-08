@@ -114,9 +114,11 @@ def generate_thrust_curve(folder_path, datapoints, data_labels, time_vector):
     source_name : str
         The path to the thrust curve.
     """
+    from .._helpers import get_column_index
+
+    thrust_index = get_column_index(data_labels, ["Thrust", "Empuje"])
     thrust = [
-        float(datapoint.text.split(",")[data_labels.index("Thrust")])
-        for datapoint in datapoints
+        float(datapoint.text.split(",")[thrust_index]) for datapoint in datapoints
     ]
     logger.info("Collected thrust vector")
 
@@ -165,17 +167,23 @@ def __get_motor_mass(datapoints, data_labels):
     burnout_position : int
         The index of the burnout position in the datapoints list.
     """
-    if "Propellant mass" in data_labels:
+    from .._helpers import get_column_index
+
+    try:
+        prop_mass_index = get_column_index(
+            data_labels, ["Propellant mass", "Masa del propulsor"]
+        )
         prop_mass_vector = [
-            float(datapoint.text.split(",")[data_labels.index("Propellant mass")])
-            for datapoint in datapoints
+            float(datapoint.text.split(",")[prop_mass_index]) for datapoint in datapoints
         ]
         motor_dry_mass = min(prop_mass_vector)
         logger.info("The motor dry mass is %.3f kg.", motor_dry_mass)
-    elif "Motor mass" in data_labels:
+    except ValueError:
+        # Fallback to Motor mass if Propellant mass is not found
+        motor_mass_index = get_column_index(data_labels, ["Motor mass", "Masa del motor"])
         motor_mass = np.array(
             [
-                float(datapoint.text.split(",")[data_labels.index("Motor mass")])
+                float(datapoint.text.split(",")[motor_mass_index])
                 for datapoint in datapoints
             ]
         )

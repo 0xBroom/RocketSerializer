@@ -126,6 +126,32 @@ def _dict_to_string(dictionary, indent=0):
     return string
 
 
+def get_column_index(data_labels, keys):
+    """Get the index of the column in the data labels.
+
+    Parameters
+    ----------
+    data_labels : list
+        List of strings with the labels of the data.
+    keys : list
+        List of strings with the possible keys of the column.
+
+    Returns
+    -------
+    int
+        The index of the column in the data labels.
+
+    Raises
+    ------
+    ValueError
+        If the column is not found in the data labels.
+    """
+    for key in keys:
+        if key in data_labels:
+            return data_labels.index(key)
+    raise ValueError(f"Could not find any of the keys '{keys}' in the data labels.")
+
+
 # if __name__ == "__main__":
 #     import doctest
 

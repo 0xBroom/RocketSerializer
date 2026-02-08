@@ -26,9 +26,11 @@ def save_drag_curve(datapoints, data_labels, output_folder):
         The path to the drag curve.
     """
     # Remove the data after apogee
+    from .._helpers import get_column_index
+
+    alt_index = get_column_index(data_labels, ["Altitude", "Altitud"])
     altitude_vector = [
-        float(datapoint.text.split(",")[data_labels.index("Altitude")])
-        for datapoint in datapoints
+        float(datapoint.text.split(",")[alt_index]) for datapoint in datapoints
     ]
     logger.info("Collected altitude vector")
 
@@ -37,13 +39,15 @@ def save_drag_curve(datapoints, data_labels, output_folder):
     logger.info("Removed data after apogee")
 
     # Extract the drag coefficient and Mach number
+    cd_index = get_column_index(
+        data_labels, ["Axial drag coefficient", "Coeficiente de rozamiento axial"]
+    )
     cd = [
-        float(datapoint.text.split(",")[data_labels.index("Axial drag coefficient")])
-        for datapoint in datapoints
+        float(datapoint.text.split(",")[cd_index]) for datapoint in datapoints
     ]
+    mach_index = get_column_index(data_labels, ["Mach number", "Número Mach"])
     mach = [
-        float(datapoint.text.split(",")[data_labels.index("Mach number")])
-        for datapoint in datapoints
+        float(datapoint.text.split(",")[mach_index]) for datapoint in datapoints
     ]
     logger.info("Collected drag coefficient and Mach number")
 
