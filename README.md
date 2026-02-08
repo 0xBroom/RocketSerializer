@@ -66,7 +66,31 @@ will be automatically installed:
 - rocketpy>=1.1.0
 - nbformat>=5.2.0
 
-## Usage - command line interface
+## Docker Usage
+
+If you prefer not to install Python or Java locally, you can use the provided Docker environment.
+
+### Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/) must be installed and running.
+
+### How to Run
+
+Use the `run_with_docker.sh` script to execute commands inside the container. The script will automatically build the image if it doesn't exist.
+
+To convert an `.ork` file to JSON:
+
+```bash
+./run_with_docker.sh ork2json --filepath your_rocket.ork
+```
+
+To generate a Jupyter Notebook:
+
+```bash
+./run_with_docker.sh ork2notebook --filepath your_rocket.ork
+```
+
+The script mounts your current directory to the container, so input files and output files will be accessible from your host machine.
 
 The `rocketserializer` package will automatically install 2 command-line-interface (cli)
 options, here's an example:
@@ -93,7 +117,7 @@ The options are the following:
 - `--encoding` : The encoding of the .ork file. By default, it is set to `utf-8`.
 - `--verbose` : If you want to see the progress of the serialization, set this option to True. By default, it is set to False.
 
-Only  the `--filepath` option is mandatory.
+Only the `--filepath` option is mandatory.
 
 ### Creating a simulation notebook
 
@@ -131,12 +155,12 @@ Discord server.
 The 3 main ways of contributing to this project are:
 
 1. **Reporting bugs and suggesting new features.**
-    - Use GitHub, preferably, to report bugs and suggest new features.
-    - In case you don't have a GitHub account, you can reach out to us on RocketPy's Discord server
+   - Use GitHub, preferably, to report bugs and suggest new features.
+   - In case you don't have a GitHub account, you can reach out to us on RocketPy's Discord server
 2. **Sharing .ork files that can be used to test the library.**
-    - If you have a .ork file that is not working with the library, please share it with us.
-    - If you have a .ork file that is working with the library, please share it with us.
-    - If you allow us to use and share your .ork file, we can add it to the test suite.
+   - If you have a .ork file that is not working with the library, please share it with us.
+   - If you have a .ork file that is working with the library, please share it with us.
+   - If you allow us to use and share your .ork file, we can add it to the test suite.
 3. **Developing new features and fixing bugs thorough pull requests on GitHub.**
-    - If you want to develop new features, you are more than welcome to do so.
-    - Please reach out to the maintainers to discuss the new feature before starting the development. 
+   - If you want to develop new features, you are more than welcome to do so.
+   - Please reach out to the maintainers to discuss the new feature before starting the development.
